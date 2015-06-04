@@ -7,8 +7,18 @@ import jp.ac.it_college.std.s14002.pdp.adapter.Print;
 import jp.ac.it_college.std.s14002.pdp.adapter.Print2;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner2;
+import jp.ac.it_college.std.s14002.pdp.factory.framework.Product;
+import jp.ac.it_college.std.s14002.pdp.factory.singleton.Singleton;
+import jp.ac.it_college.std.s14002.pdp.factory.singleton.Singleton;
+import jp.ac.it_college.std.s14002.pdp.prototype.MessageBox;
+import jp.ac.it_college.std.s14002.pdp.prototype.UnderlinePen;
+import jp.ac.it_college.std.s14002.pdp.prototype.framework.*;
+import jp.ac.it_college.std.s14002.pdp.template.AbstractDisplay;
+import jp.ac.it_college.std.s14002.pdp.template.CharDisplay;
+import jp.ac.it_college.std.s14002.pdp.template.StringDisplay;
+import jp.ac.it_college.std.s14002.pdp.factory.framework.*;
+import jp.ac.it_college.std.s14002.pdp.factory.idcard.*;
 
-import javax.sound.sampled.Line;
 import java.util.*;
 
 /**
@@ -28,7 +38,11 @@ public class Main {
         // stackTest();
         // hashSetTest1();
         // hashMapTest();
-        practice1_1();
+        // practice1_1();
+        // templateTest();
+        // factoryMain();
+        SingletonMain();
+
 
 
     }
@@ -75,6 +89,57 @@ public class Main {
         p.printWeak();
         p.printStrong();
     }
+
+    public static void templateTest() {
+        AbstractDisplay d1 = new CharDisplay('H');
+        AbstractDisplay d2 = new StringDisplay("Hello,world");
+        AbstractDisplay d3 = new StringDisplay("こんにちわ。");
+        d1.display();
+        d2.display();
+        d3.display();
+    }
+
+    public static void factoryMain() {
+        Factory factory = new IDCardFactory();
+        Product card1 = factory.create("結城浩");
+        Product card2 = factory.create("とむら");
+        Product card3 = factory.create("佐藤花子");
+        card1.use();
+        card2.use();
+        card3.use();
+    }
+
+    public static void SingletonMain() {
+        System.out.println("Start.");
+        Singleton obj1 = Singleton.getInstance();
+        Singleton obj2 = Singleton.getInstance();
+        if (obj1 == obj2) {
+            System.out.println("obj1とobj2は同じインスタンスです。");
+        } else {
+            System.out.println("obj1とobj2は同じインスタンスではありません");
+        }
+        System.out.println("End.");
+    }
+
+    public static void PrototypeMain() {
+        Manager manager = new Manager();
+        UnderlinePen upen = new UnderlinePen('~');
+        MessageBox mbox = new MessageBox('*');
+        MessageBox sbox = new MessageBox('/');
+        manager.register("strong message", upen);
+        manager.register("warning box", mbox);
+        manager.register("slash box", sbox);
+
+        jp.ac.it_college.std.s14002.pdp.prototype.framework.Product p1 = manager.create("strong message");
+        p1.use("Hello, world.");
+        jp.ac.it_college.std.s14002.pdp.prototype.framework.Product p2 = manager.create("warning box");
+        p1.use("Hello, world.");
+        jp.ac.it_college.std.s14002.pdp.prototype.framework.Product p3 = manager.create("slash box");
+        p1.use("Hello, world.");
+
+
+    }
+
     public static void arrayListTest1() {
         ArrayList<String> list = new ArrayList<>();
         list.add("Alice");
