@@ -1,5 +1,6 @@
 package jp.ac.it_college.std.s14002.pdp;
 
+import javafx.scene.text.TextBuilder;
 import jp.ac.it_college.std.s14002.pdp.Book;
 import jp.ac.it_college.std.s14002.pdp.BookShelf;
 import jp.ac.it_college.std.s14002.pdp.Iterator;
@@ -19,6 +20,7 @@ import jp.ac.it_college.std.s14002.pdp.template.StringDisplay;
 import jp.ac.it_college.std.s14002.pdp.factory.framework.*;
 import jp.ac.it_college.std.s14002.pdp.factory.idcard.*;
 
+import java.awt.image.DirectColorModel;
 import java.util.*;
 
 /**
@@ -41,10 +43,36 @@ public class Main {
         // practice1_1();
         // templateTest();
         // factoryMain();
-        SingletonMain();
+        // SingletonMain();
+        builderMain(new String[] {"html"});
 
+    }
 
-
+    private static void builderMain(String[] args) {
+        if (args.length != 1) {
+            Builderusage();
+            System.exit(0);
+        }
+        if (args[0].equals("plain")) {
+            TextBuiler textbuilder = new TextBuilder();
+            Director director = new  Director(textbuilder);
+            director.construct();
+            String result = textbuilder.getResult();
+            System.out.println(result);
+        } else if (args[0].equals("html")) {
+            HTMLBuilder htmlbuilder = new HTMLBuilder();
+            Director director = new Director(htmlbuilder);
+            director.construct();
+            String filename = htmlbuilder.getResult();
+            System.out.println(filename + "が作成されました");
+        } else {
+            Builderusage();
+            System.exit(0);
+        }
+    }
+    public static void usage() {
+        System.out.println("Usage: java Main plain プレーンテキストで文書作成");
+        System.out.println("Usage: java Main html HTMLファイルで文書作成");
     }
 
     public static void IteratorMain() {
