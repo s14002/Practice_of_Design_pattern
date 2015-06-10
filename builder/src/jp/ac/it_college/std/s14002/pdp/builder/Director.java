@@ -10,12 +10,12 @@ public class Director {
     }
     public void construct() {
         builder.makeTitel("Greeting")
-                .makeString("朝から昼にかけて");
-        builder.makeItems(new String[]{
+                .makeString("朝から昼にかけて")
+                .makeItems(new String[]{
                 "おはようございます",
                 "こんにちは",
-        });
-        builder.makeString("夜に")
+        })
+                .makeString("夜に")
                 .makeItems(new String[]{
                 "こんにちは",
                 "おやすみなさい",
