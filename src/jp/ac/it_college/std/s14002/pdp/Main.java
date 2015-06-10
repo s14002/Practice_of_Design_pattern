@@ -1,22 +1,31 @@
 package jp.ac.it_college.std.s14002.pdp;
 
+import javafx.scene.text.TextBuilder;
 import jp.ac.it_college.std.s14002.pdp.adapter.Print;
 import jp.ac.it_college.std.s14002.pdp.adapter.Print2;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner2;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Link;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Page;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Tray;
+import jp.ac.it_college.std.s14002.pdp.bridge.CountDisplay;
+import jp.ac.it_college.std.s14002.pdp.bridge.Display;
+import jp.ac.it_college.std.s14002.pdp.bridge.StringDisplayImpl;
+import jp.ac.it_college.std.s14002.pdp.builder.Director;
+import jp.ac.it_college.std.s14002.pdp.builder.HTMLBuilder;
 import jp.ac.it_college.std.s14002.pdp.factory.framework.Product;
 import jp.ac.it_college.std.s14002.pdp.factory.singleton.Singleton;
 import jp.ac.it_college.std.s14002.pdp.iterator.Book;
 import jp.ac.it_college.std.s14002.pdp.iterator.BookShelf;
 import jp.ac.it_college.std.s14002.pdp.prototype.MessageBox;
 import jp.ac.it_college.std.s14002.pdp.prototype.UnderlinePen;
+import jp.ac.it_college.std.s14002.pdp.prototype.framework.Manager;
 import jp.ac.it_college.std.s14002.pdp.template.AbstractDisplay;
 import jp.ac.it_college.std.s14002.pdp.template.CharDisplay;
 import jp.ac.it_college.std.s14002.pdp.template.StringDisplay;
 import jp.ac.it_college.std.s14002.pdp.factory.framework.Factory;
 import jp.ac.it_college.std.s14002.pdp.factory.idcard.IDCardFactory;
 import jp.ac.it_college.std.s14002.pdp.iterator.Iterator;
-import sun.plugin.javascript.navig.Link;
 
 
 import java.util.*;
@@ -43,10 +52,13 @@ public class Main {
         // factoryMain();
         // SingletonMain();
         // builderMain(new String[] {"html"});
-        abstractMain();
+        // abstractMain();
+        bridgeMain();
+
 
     }
 
+    /*
     public static void abstractMain(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java Main class.name.of.ConcreteFactory");
@@ -55,7 +67,7 @@ public class Main {
             System.exit(0);
         }
         jp.ac.it_college.std.s14002.pdp.af.factory.Factory factory
-                = jp.ac.it_college.std.s14002.pdp.af.Factory.getFactory(args[0]);
+                = jp.ac.it_college.std.s14002.pdp.af.factory.Factory.getFactory(args[0]);
 
         Link asahi = factory.createLink("朝日新聞", "http://www.asahi.com/");
         Link yomiumi = factory.createLink("読売新聞", "http://www.yomiuri.co.jp/");
@@ -83,17 +95,17 @@ public class Main {
         page.add(traysearch);
         page.output();
     }
-
+*/
     public static void builderMain(String[] args) {
         if (args.length != 1) {
             Builderusage();
             System.exit(0);
         }
         if (args[0].equals("plain")) {
-            TextBuilder textbuilder = new TextBuilder();
-            Director director = new  Director(textbuilder);
+            jp.ac.it_college.std.s14002.pdp.builder.TextBuilder textbuilder = new jp.ac.it_college.std.s14002.pdp.builder.TextBuilder();
+            Director director = new Director(textbuilder);
             director.construct();
-            String result = textBuilder.getResult();
+            String result = textbuilder.getResult();
             System.out.println(result);
         } else if (args[0].equals("html")) {
             HTMLBuilder htmlbuilder = new HTMLBuilder();
@@ -106,6 +118,17 @@ public class Main {
             System.exit(0);
         }
     }
+
+    public static void bridgeMain() {
+        Display d1 = new Display(new StringDisplayImpl("Hello, Japan"));
+        Display d2 = new CountDisplay(new StringDisplayImpl("Hello, World"));
+        CountDisplay d3 = new CountDisplay(new StringDisplayImpl("Hello, Universe"));
+        d1.display();
+        d2.display();
+        d3.display();
+        d3.multiDisplay(5);
+    }
+
     public static void Builderusage() {
         System.out.println("Usage: java Main plain プレーンテキストで文書作成");
         System.out.println("Usage: java Main html HTMLファイルで文書作成");

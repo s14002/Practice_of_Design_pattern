@@ -20,7 +20,7 @@ public abstract class Factory {
     public static Factory getFactory(String classname) {
         Factory factory = null;
         try {
-            factory = getFactory(Class.forName(name));
+            factory = getFactory(Class.forName(classname));
         } catch (ClassNotFoundException e) {
             System.err.println(e.getMessage());
         } catch (Exception e) {

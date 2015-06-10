@@ -10,14 +10,14 @@ import java.util.List;
  * Created by s14002 on 15/06/04.
  */
 public class IDCardFactory extends Factory {
-    private List owners = new ArrayList();
+    private List<String> owners = new ArrayList<String>();
     protected Product createProduct(String owner) {
         return new IDCard(owner);
     }
     protected void registerProduct(Product product) {
         owners.add(((IDCard)product).getOwner());
     }
-    public List getOwners() {
+    public List<String> getOwners() {
         return owners;
     }
 }
