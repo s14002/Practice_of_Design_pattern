@@ -1,18 +1,17 @@
 package jp.ac.it_college.std.s14002.pdp;
 
-import javafx.scene.text.TextBuilder;
 import jp.ac.it_college.std.s14002.pdp.adapter.Print;
 import jp.ac.it_college.std.s14002.pdp.adapter.Print2;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner;
 import jp.ac.it_college.std.s14002.pdp.adapter.PrintBanner2;
-import jp.ac.it_college.std.s14002.pdp.af.factory.Link;
-import jp.ac.it_college.std.s14002.pdp.af.factory.Page;
-import jp.ac.it_college.std.s14002.pdp.af.factory.Tray;
 import jp.ac.it_college.std.s14002.pdp.bridge.CountDisplay;
 import jp.ac.it_college.std.s14002.pdp.bridge.Display;
 import jp.ac.it_college.std.s14002.pdp.bridge.StringDisplayImpl;
 import jp.ac.it_college.std.s14002.pdp.builder.Director;
 import jp.ac.it_college.std.s14002.pdp.builder.HTMLBuilder;
+import jp.ac.it_college.std.s14002.pdp.composite.Directory;
+import jp.ac.it_college.std.s14002.pdp.composite.File;
+import jp.ac.it_college.std.s14002.pdp.composite.FileTreatmentException;
 import jp.ac.it_college.std.s14002.pdp.factory.framework.Product;
 import jp.ac.it_college.std.s14002.pdp.factory.singleton.Singleton;
 import jp.ac.it_college.std.s14002.pdp.iterator.Book;
@@ -20,12 +19,20 @@ import jp.ac.it_college.std.s14002.pdp.iterator.BookShelf;
 import jp.ac.it_college.std.s14002.pdp.prototype.MessageBox;
 import jp.ac.it_college.std.s14002.pdp.prototype.UnderlinePen;
 import jp.ac.it_college.std.s14002.pdp.prototype.framework.Manager;
+import jp.ac.it_college.std.s14002.pdp.strategy.Hand;
+import jp.ac.it_college.std.s14002.pdp.strategy.Player;
+import jp.ac.it_college.std.s14002.pdp.strategy.ProbStrategy;
+import jp.ac.it_college.std.s14002.pdp.strategy.WinningStrategy;
 import jp.ac.it_college.std.s14002.pdp.template.AbstractDisplay;
 import jp.ac.it_college.std.s14002.pdp.template.CharDisplay;
 import jp.ac.it_college.std.s14002.pdp.template.StringDisplay;
 import jp.ac.it_college.std.s14002.pdp.factory.framework.Factory;
 import jp.ac.it_college.std.s14002.pdp.factory.idcard.IDCardFactory;
 import jp.ac.it_college.std.s14002.pdp.iterator.Iterator;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Link;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Page;
+import jp.ac.it_college.std.s14002.pdp.af.factory.Tray;
+
 
 
 import java.util.*;
@@ -53,17 +60,83 @@ public class Main {
         // SingletonMain();
         // builderMain(new String[] {"html"});
         // abstractMain();
-        bridgeMain();
-
-
+        // bridgeMain();
+        // strategyMain();
+        // compositeMain();
+        jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
     }
 
-    /*
+    public static void compositeMain() {
+        try {
+            System.out.println("Making root entries...");
+            Directory rootdir = new Directory("root");
+            Directory bindir = new Directory("bin");
+            Directory tmpdir = new Directory("tmp");
+            Directory usrdir = new Directory("usr");
+            rootdir.add(bindir);
+            rootdir.add(tmpdir);
+            rootdir.add(tmpdir);
+            rootdir.add(usrdir);
+            bindir.add(new File("vi", 10000));
+            bindir.add(new File("latex", 20000));
+            rootdir.printList();
+
+            System.out.println("");
+            System.out.println("Making user entries...");
+            Directory yuki = new Directory("yuki");
+            Directory hanako = new Directory("Hanako");
+            Directory torura = new Directory("tomura");
+            usrdir.add(yuki);
+            usrdir.add(hanako);
+            usrdir.add(torura);
+            yuki.add(new File("diary.html", 100));
+            yuki.add(new File("Composite.java", 200));
+            hanako.add(new File("memo.tex", 300));
+            torura.add(new File("game.doc", 400));
+            torura.add(new File("junk.mail", 500));
+            rootdir.printList();
+        } catch (FileTreatmentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void strategyMain(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: java Main randomseed1 randomseed2");
+            System.out.println("Example: java Main 314 15");
+            System.exit(0);
+        }
+        int seed1 = Integer.parseInt(args[0]);
+        int seed2 = Integer.parseInt(args[1]);
+        Player player1 = new Player("Taro", new WinningStrategy(seed1));
+        Player player2 = new Player("Hana", new ProbStrategy(seed2));
+        for (int i = 0; i <10000; i++) {
+            Hand nextHand1 = player1.nextHand();
+            Hand nextHand2 = player2.nextHand();
+            if (nextHand1.isStrongerThan(nextHand2)) {
+                System.out.println("Winner:" + player1);
+                player1.win();
+                player2.lose();
+            } else if (nextHand2.isStrongerThan(nextHand1)) {
+                System.out.println("Winner:" + player2);
+                player1.lose();
+                player2.win();
+            } else {
+                System.out.println("Even...");
+                player1.even();
+                player2.even();
+            }
+        }
+        System.out.println("Total result:");
+        System.out.println(player1.toString());
+        System.out.println(player2.toString());
+    }
+
     public static void abstractMain(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java Main class.name.of.ConcreteFactory");
-            System.out.println("Example 1: java Main listfactory");
-            System.out.println("Example 2: java Main tablefactory");
+            System.out.println("Example 1: java Main listfactory.ListFactory");
+            System.out.println("Example 2: java Main tablefactory.TableFactory");
             System.exit(0);
         }
         jp.ac.it_college.std.s14002.pdp.af.factory.Factory factory
@@ -85,17 +158,17 @@ public class Main {
         trayyahoo.add(us_yahoo);
         trayyahoo.add(jp_yahoo);
 
-        Tray traysearch = factory.createPage("サーチエンジン");
+        Tray traysearch = factory.createTray("サーチエンジン");
         traysearch.add(trayyahoo);
         traysearch.add(excite);
         traysearch.add(google);
 
-        Page page = factory.createPage(LinkPage, "結城浩");
+        Page page = factory.createPage("LinkPage", "結城浩");
         page.add(traynews);
         page.add(traysearch);
         page.output();
     }
-*/
+
     public static void builderMain(String[] args) {
         if (args.length != 1) {
             Builderusage();
@@ -171,6 +244,7 @@ public class Main {
         p.printWeak();
         p.printStrong();
     }
+
     public static void adapterMain2() {
         Print2 p = new PrintBanner2("Hello");
         p.printWeak();
@@ -240,6 +314,7 @@ public class Main {
             System.out.println(name);
         }
     }
+
     public static void arrayListTest2() {
         ArrayList<String> list = new ArrayList<>();
 
@@ -271,6 +346,7 @@ public class Main {
             System.out.println("listにAliceは含まれていません。    ");
         }
     }
+
     public static void listTest() {
         List<String> list = new ArrayList<>();
 
@@ -290,6 +366,7 @@ public class Main {
         System.out.println("最初に出てくるBobの添字 = " + list.indexOf("Bob"));
         System.out.println("最後に出てくるBobの添字 = " + list.lastIndexOf("Bob"));
     }
+
     public static void linkedListTest1() {
         LinkedList<String> list = new LinkedList<String>();
 
@@ -302,6 +379,7 @@ public class Main {
         list.addFirst("Alice");
         System.out.println(list);
     }
+
     public static void queueTest1() {
         Queue<String> queue = new LinkedList<String>();
 
@@ -366,6 +444,7 @@ public class Main {
             System.out.println("removeFirst後のstack = " + stack);
         }
     }
+
     public static void hashSetTest1() {
         Set<String> set = new HashSet<String>();
 
@@ -384,6 +463,7 @@ public class Main {
             System.out.println("setはAliceに含まれていません。");
         }
     }
+
     public static void hashMapTest() {
         Map<String,Integer> map = new HashMap<String,Integer>();
 
