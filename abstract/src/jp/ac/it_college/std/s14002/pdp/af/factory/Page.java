@@ -1,7 +1,5 @@
 package jp.ac.it_college.std.s14002.pdp.af.factory;
 
-import jp.ac.it_college.std.s14002.pdp.af.factory.Item;
-
 import java.io.*;
 import java.util.ArrayList;
 

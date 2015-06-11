@@ -63,7 +63,8 @@ public class Main {
         // bridgeMain();
         // strategyMain();
         // compositeMain();
-        jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
+        jp.ac.it_college.std.s14002.pdp.visitor.Main.main(args);
     }
 
     public static void compositeMain() {
@@ -74,7 +75,6 @@ public class Main {
             Directory tmpdir = new Directory("tmp");
             Directory usrdir = new Directory("usr");
             rootdir.add(bindir);
-            rootdir.add(tmpdir);
             rootdir.add(tmpdir);
             rootdir.add(usrdir);
             bindir.add(new File("vi", 10000));
