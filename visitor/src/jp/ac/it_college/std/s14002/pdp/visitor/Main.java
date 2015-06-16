@@ -1,5 +1,7 @@
 package jp.ac.it_college.std.s14002.pdp.visitor;
 
+import java.util.Iterator;
+
 /**
  * Created by s14002 on 15/06/11.
  */
@@ -32,6 +34,7 @@ public class Main {
             torura.add(new File("game.doc", 400));
             torura.add(new File("junk.mail", 500));
             rootdir.accept(new ListVisitor());
+
         } catch (FileTreatmentException e) {
             e.printStackTrace();
         }

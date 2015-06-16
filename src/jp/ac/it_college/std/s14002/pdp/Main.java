@@ -64,7 +64,11 @@ public class Main {
         // strategyMain();
         // compositeMain();
         // jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
-        jp.ac.it_college.std.s14002.pdp.visitor.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.visitor.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.responsibility.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.facade.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.mediator.Main.main(args);
+        jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
     }
 
     public static void compositeMain() {
