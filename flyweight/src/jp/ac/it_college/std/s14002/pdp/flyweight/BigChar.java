@@ -16,7 +16,7 @@ public class BigChar {
         this.charname = charname;
         try {
             BufferedReader reader = new BufferedReader(
-                    new FileReader("big"+charname+".txt")
+                    new FileReader("data20/big"+charname+".txt")
             );
             String line;
             StringBuffer buf= new StringBuffer();

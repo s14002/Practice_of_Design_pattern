@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Created by s14002 on 15/06/17.
  */
 public class BigCharFactory {
-    private HashMap<String, BigChar> pool =new HashMap<>();
+    private HashMap<Character, BigChar> pool =new HashMap<>();
 
     private static BigCharFactory singleton = new BigCharFactory();
 
@@ -16,10 +16,10 @@ public class BigCharFactory {
         return singleton;
     }
     public synchronized BigChar getBigchar(char charname) {
-        BigChar bc = pool.get("" + charname);
+        BigChar bc = pool.get(charname);
         if (bc==null) {
             bc = new BigChar(charname);
-            pool.put("" + charname,bc);
+            pool.put(charname,bc);
         }
         return bc;
     }
