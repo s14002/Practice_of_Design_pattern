@@ -65,10 +65,10 @@ public class Main {
         // compositeMain();
         // jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.visitor.Main.main(args);
-        // jp.ac.it_college.std.s14002.pdp.responsibility.Main.main(args);
+         jp.ac.it_college.std.s14002.pdp.responsibility.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.facade.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.mediator.Main.main(args);
-        jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
+        //jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
     }
 
     public static void compositeMain() {
@@ -178,21 +178,26 @@ public class Main {
             Builderusage();
             System.exit(0);
         }
-        if (args[0].equals("plain")) {
-            jp.ac.it_college.std.s14002.pdp.builder.TextBuilder textbuilder = new jp.ac.it_college.std.s14002.pdp.builder.TextBuilder();
-            Director director = new Director(textbuilder);
-            director.construct();
-            String result = textbuilder.getResult();
-            System.out.println(result);
-        } else if (args[0].equals("html")) {
-            HTMLBuilder htmlbuilder = new HTMLBuilder();
-            Director director = new Director(htmlbuilder);
-            director.construct();
-            String filename = htmlbuilder.getResult();
-            System.out.println(filename + "が作成されました");
-        } else {
-            Builderusage();
-            System.exit(0);
+        switch (args[0]) {
+            case "plain": {
+                jp.ac.it_college.std.s14002.pdp.builder.TextBuilder textbuilder = new jp.ac.it_college.std.s14002.pdp.builder.TextBuilder();
+                Director director = new Director(textbuilder);
+                director.construct();
+                String result = textbuilder.getResult();
+                System.out.println(result);
+                break;
+            }
+            case "html": {
+                HTMLBuilder htmlbuilder = new HTMLBuilder();
+                Director director = new Director(htmlbuilder);
+                director.construct();
+                String filename = htmlbuilder.getResult();
+                System.out.println(filename + "が作成されました");
+                break;
+            }
+            default:
+                Builderusage();
+                System.exit(0);
         }
     }
 
@@ -372,7 +377,7 @@ public class Main {
     }
 
     public static void linkedListTest1() {
-        LinkedList<String> list = new LinkedList<String>();
+        LinkedList<String> list = new LinkedList<>();
 
         list.add("Bob");
         list.add("Chris");
@@ -385,7 +390,7 @@ public class Main {
     }
 
     public static void queueTest1() {
-        Queue<String> queue = new LinkedList<String>();
+        Queue<String> queue = new LinkedList<>();
 
         queue.offer("Arice");
         System.out.println("offer後のqueue = " + queue);
@@ -404,7 +409,7 @@ public class Main {
     }
 
     public static void queueTest2() {
-        Queue<String> queue = new LinkedList<String>();
+        Queue<String> queue = new LinkedList<>();
 
         queue.offer("Arice");
         System.out.println("offer後のqueue = " + queue);
@@ -450,7 +455,7 @@ public class Main {
     }
 
     public static void hashSetTest1() {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
 
         set.add("Alice");
         set.add("Bob");
@@ -469,7 +474,7 @@ public class Main {
     }
 
     public static void hashMapTest() {
-        Map<String,Integer> map = new HashMap<String,Integer>();
+        Map<String,Integer> map = new HashMap<>();
 
         map.put("Alice", 100);
         map.put("Bob", 57);
