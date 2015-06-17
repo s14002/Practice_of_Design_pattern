@@ -23,5 +23,8 @@
     <orderEntry type="module" module-name="responsibility" />
     <orderEntry type="module" module-name="mediator" />
     <orderEntry type="module" module-name="observer" />
+    <orderEntry type="module" module-name="memento" />
+    <orderEntry type="module" module-name="state" />
+    <orderEntry type="module" module-name="flyweight" />
   </component>
 </module>

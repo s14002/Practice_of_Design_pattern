@@ -65,10 +65,13 @@ public class Main {
         // compositeMain();
         // jp.ac.it_college.std.s14002.pdp.decorator.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.visitor.Main.main(args);
-         jp.ac.it_college.std.s14002.pdp.responsibility.Main.main(args);
+        // jp.ac.it_college.std.s14002.pdp.responsibility.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.facade.Main.main(args);
         // jp.ac.it_college.std.s14002.pdp.mediator.Main.main(args);
         //jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
+        //jp.ac.it_college.std.s14002.pdp.memento.Main.main(args);
+        //jp.ac.it_college.std.s14002.pdp.state.Main.main(args);
+        jp.ac.it_college.std.s14002.pdp.flyweight.Main.main(args);
     }
 
     public static void compositeMain() {
