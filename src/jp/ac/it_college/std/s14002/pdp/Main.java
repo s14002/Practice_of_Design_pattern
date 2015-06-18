@@ -71,7 +71,10 @@ public class Main {
         //jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
         //jp.ac.it_college.std.s14002.pdp.memento.Main.main(args);
         //jp.ac.it_college.std.s14002.pdp.state.Main.main(args);
-        jp.ac.it_college.std.s14002.pdp.flyweight.Main.main(new String[]{"1212123"});
+        //jp.ac.it_college.std.s14002.pdp.flyweight.Main.main(new String[]{"1212123"});
+        //jp.ac.it_college.std.s14002.pdp.proxy.Main.main(args);
+        //jp.ac.it_college.std.s14002.pdp.command.Main.main(args);
+        jp.ac.it_college.std.s14002.pdp.interpreter.Main.main(args);
     }
 
     public static void compositeMain() {
