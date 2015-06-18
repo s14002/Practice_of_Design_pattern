@@ -1,0 +1,795 @@
+Index: .idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/modules.xml	(revision 7c476acbbc5ffde0676a89fd0344f16ae5df8a7c)
++++ .idea/modules.xml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -8,16 +8,19 @@
+       <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
+       <module fileurl="file://$PROJECT_DIR$/bridge/bridge.iml" filepath="$PROJECT_DIR$/bridge/bridge.iml" />
+       <module fileurl="file://$PROJECT_DIR$/builder/builder.iml" filepath="$PROJECT_DIR$/builder/builder.iml" />
++      <module fileurl="file://$PROJECT_DIR$/command/command.iml" filepath="$PROJECT_DIR$/command/command.iml" />
+       <module fileurl="file://$PROJECT_DIR$/composite/composite.iml" filepath="$PROJECT_DIR$/composite/composite.iml" />
+       <module fileurl="file://$PROJECT_DIR$/decorator/decorator.iml" filepath="$PROJECT_DIR$/decorator/decorator.iml" />
+       <module fileurl="file://$PROJECT_DIR$/facade/facade.iml" filepath="$PROJECT_DIR$/facade/facade.iml" />
+       <module fileurl="file://$PROJECT_DIR$/factory/factory.iml" filepath="$PROJECT_DIR$/factory/factory.iml" />
+       <module fileurl="file://$PROJECT_DIR$/flyweight/flyweight.iml" filepath="$PROJECT_DIR$/flyweight/flyweight.iml" />
++      <module fileurl="file://$PROJECT_DIR$/interpreter/interpreter.iml" filepath="$PROJECT_DIR$/interpreter/interpreter.iml" />
+       <module fileurl="file://$PROJECT_DIR$/iterator/iterator.iml" filepath="$PROJECT_DIR$/iterator/iterator.iml" />
+       <module fileurl="file://$PROJECT_DIR$/mediator/mediator.iml" filepath="$PROJECT_DIR$/mediator/mediator.iml" />
+       <module fileurl="file://$PROJECT_DIR$/memento/memento.iml" filepath="$PROJECT_DIR$/memento/memento.iml" />
+       <module fileurl="file://$PROJECT_DIR$/observer/observer.iml" filepath="$PROJECT_DIR$/observer/observer.iml" />
+       <module fileurl="file://$PROJECT_DIR$/prototype/prototype.iml" filepath="$PROJECT_DIR$/prototype/prototype.iml" />
++      <module fileurl="file://$PROJECT_DIR$/proxy/proxy.iml" filepath="$PROJECT_DIR$/proxy/proxy.iml" />
+       <module fileurl="file://$PROJECT_DIR$/responsibility/responsibility.iml" filepath="$PROJECT_DIR$/responsibility/responsibility.iml" />
+       <module fileurl="file://$PROJECT_DIR$/state/state.iml" filepath="$PROJECT_DIR$/state/state.iml" />
+       <module fileurl="file://$PROJECT_DIR$/strategy/strategy.iml" filepath="$PROJECT_DIR$/strategy/strategy.iml" />
+\ No newline at end of file
+Index: Practice of Design pattern.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Practice of Design pattern.iml	(revision 7c476acbbc5ffde0676a89fd0344f16ae5df8a7c)
++++ Practice of Design pattern.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -26,5 +26,8 @@
+     <orderEntry type="module" module-name="memento" />
+     <orderEntry type="module" module-name="state" />
+     <orderEntry type="module" module-name="flyweight" />
++    <orderEntry type="module" module-name="proxy" />
++    <orderEntry type="module" module-name="command" />
++    <orderEntry type="module" module-name="interpreter" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: command/command.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/command.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/command.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,94 @@
++package jp.ac.it_college.std.s14002.pdp.command;
++
++import jp.ac.it_college.std.s14002.pdp.command.command.Command;
++import jp.ac.it_college.std.s14002.pdp.command.command.MacroCommand;
++import jp.ac.it_college.std.s14002.pdp.command.drawer.DrawCanvas;
++import jp.ac.it_college.std.s14002.pdp.command.drawer.DrawCommand;
++import jp.ac.it_college.std.s14002.pdp.command.drawer.Drawable;
++
++import javax.swing.*;
++import java.awt.event.*;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class Main extends JFrame implements ActionListener, MouseMotionListener,WindowListener{
++    private MacroCommand history = new MacroCommand();
++    private DrawCanvas canvas = new DrawCanvas(400,400,history);
++    private JButton clearButton = new JButton("clear");
++
++    public Main(String title) {
++        super(title);
++
++        this.addWindowListener(this);
++        canvas.addMouseMotionListener(this);
++        clearButton.addActionListener(this);
++
++        Box buttonBox =new Box(BoxLayout.X_AXIS);
++        buttonBox.add(clearButton);
++        Box mainBox =new Box((BoxLayout.Y_AXIS));
++        mainBox.add(canvas);
++        getContentPane().add(mainBox);
++
++        pack();
++        show();
++    }
++    @Override
++    public void actionPerformed(ActionEvent e) {
++        if (e.getSource() == clearButton) {
++            history.clear();
++            canvas.repaint();
++        }
++    }
++
++    @Override
++    public void mouseDragged(MouseEvent e) {
++        Command cmd = new DrawCommand(canvas, e.getPoint());
++        history.append(cmd);
++        cmd.execute();
++    }
++
++    @Override
++    public void mouseMoved(MouseEvent e) {
++    }
++
++    @Override
++    public void windowClosing(WindowEvent e) {
++        System.exit(0);
++    }
++
++
++    @Override
++    public void windowOpened(WindowEvent e) {
++
++    }
++
++    @Override
++    public void windowClosed(WindowEvent e) {
++
++    }
++
++    @Override
++    public void windowIconified(WindowEvent e) {
++
++    }
++
++    @Override
++    public void windowDeiconified(WindowEvent e) {
++
++    }
++
++    @Override
++    public void windowActivated(WindowEvent e) {
++
++    }
++
++    @Override
++    public void windowDeactivated(WindowEvent e) {
++
++    }
++
++    public static void main(String[] args) {
++        new Main("Command Pattern Sample");
++    }
++}
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/command/Command.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/command/Command.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/command/Command.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,8 @@
++package jp.ac.it_college.std.s14002.pdp.command.command;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public interface Command {
++    void execute();
++}
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/command/MacroCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/command/MacroCommand.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/command/MacroCommand.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,31 @@
++package jp.ac.it_college.std.s14002.pdp.command.command;
++
++import java.util.ArrayDeque;
++import java.util.Deque;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class MacroCommand implements Command {
++    public Deque<Command> commands  = new ArrayDeque<>();
++
++    @Override
++    public void execute() {
++        for (Command cmd : commands) {
++            cmd.execute();
++        }
++    }
++    public void append(Command cmd) {
++        if (cmd != this) {
++            commands.push(cmd);
++        }
++    }
++    public void undo() {
++         if (!commands.isEmpty()){
++            commands.pop();
++        }
++    }
++    public void clear() {
++        commands.clear();
++    }
++}
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCanvas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCanvas.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCanvas.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,32 @@
++package jp.ac.it_college.std.s14002.pdp.command.drawer;
++
++import jp.ac.it_college.std.s14002.pdp.command.command.MacroCommand;
++
++import java.awt.*;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class DrawCanvas extends Canvas implements Drawable {
++    private Color color = Color.red;
++
++    private int radius = 6;
++    private MacroCommand history;
++
++    public DrawCanvas(int width,int height,MacroCommand history) {
++        setSize(width,height);
++        setBackground(Color.white);
++        this.history = history;
++    }
++
++    public void paint(Graphics g) {
++        history.execute();
++    }
++    @Override
++    public void draw(int x, int y) {
++        Graphics g =getGraphics();
++        g.setColor(color);
++        g.fillOval(x-radius,y-radius,radius*2,radius*2);
++
++    }
++}
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCommand.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCommand.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/DrawCommand.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,23 @@
++package jp.ac.it_college.std.s14002.pdp.command.drawer;
++
++import jp.ac.it_college.std.s14002.pdp.command.command.Command;
++
++import java.awt.*;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class DrawCommand implements Command {
++    protected  Drawable drawable;
++
++    private Point position;
++
++    public DrawCommand(Drawable drawable,Point position) {
++        this.drawable=drawable;
++        this.position=position;
++    }
++    @Override
++    public void execute() {
++        drawable.draw(position.x,position.y);
++    }
++}
+Index: command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/Drawable.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/Drawable.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ command/src/jp/ac/it_college/std/s14002/pdp/command/drawer/Drawable.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,8 @@
++package jp.ac.it_college.std.s14002.pdp.command.drawer;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public interface Drawable {
++    void draw(int x, int y);
++}
+Index: flyweight/flyweight.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- flyweight/flyweight.iml	(revision 7c476acbbc5ffde0676a89fd0344f16ae5df8a7c)
++++ flyweight/flyweight.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<module version="4">
++<module type="JAVA_MODULE" version="4">
+   <component name="NewModuleRootManager" inherit-compiler-output="true">
+     <exclude-output />
+     <content url="file://$MODULE_DIR$">
+\ No newline at end of file
+Index: interpreter/interpreter.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/interpreter.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/interpreter.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandListNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandListNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandListNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,30 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++import java.util.ArrayList;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++// <command list> :: = <command>* end
++public class CommandListNode extends Node {
++    private ArrayList list = new ArrayList();
++
++    @Override
++    public void parse(Context context) throws ParseException {
++        while (true) {
++            if (context.currentToken() == null) {
++                throw new ParseException("Missing 'end' ");
++            } else if (context.currentToken().equals("end")) {
++                context.skipToken("end");
++                break;
++            } else {
++                Node commandNode = new CommandNode();
++                commandNode.parse(context);
++                list.add(commandNode);
++            }
++        }
++    }
++    public String toString() {
++        return list.toString();
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/CommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,22 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class CommandNode extends Node {
++    private Node node;
++
++    @Override
++    public void parse(Context context) throws ParseException {
++        if (context.currentToken().equals("repeat")) {
++            node = new  RepeatCommandNode();
++            node.parse(context);
++        }else {
++            node = new PrimitiveCommandNode();
++            node.parse(context);
++        }
++    }
++    public String toString() {
++        return node.toString();
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Context.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Context.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Context.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,41 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++import java.util.*;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class Context {
++    private StringTokenizer tokenizer;
++    private String currentToken;
++    public Context(String text) {
++        tokenizer = new StringTokenizer(text);
++        nextToken();
++    }
++    public String nextToken() {
++        if (tokenizer.hasMoreTokens()) {
++            currentToken = tokenizer.nextToken();
++        } else {
++            currentToken = null;
++        }
++        return currentToken;
++    }
++    public String currentToken() {
++        return currentToken;
++    }
++    public void skipToken(String token) throws ParseException {
++        if (!token.equals(currentToken)) {
++            throw new ParseException("warning: " +token+ " is expected, but "+currentToken+ "is found");
++        }
++        nextToken();
++    }
++    public int currentNumber() throws ParseException {
++        int number = 0;
++        try {
++            number = Integer.parseInt(currentToken);
++        } catch (NumberFormatException e) {
++            throw new ParseException("Warning: " + e);
++        }
++        return number;
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,25 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++import java.io.BufferedReader;
++import java.io.FileReader;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class Main {
++    public static void main(String[] args) {
++        try {
++            BufferedReader reader = new BufferedReader(new FileReader("program.txt"));
++            String text;
++            while ((text = reader.readLine()) != null) {
++                System.out.println("text = \"" + text + "\"");
++                Node node = new ProgramNode();
++                node.parse(new Context(text));
++                System.out.println("node = " +node);
++            }
++            reader.close();
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Node.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Node.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/Node.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,8 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public abstract class Node {
++    public abstract void parse(Context context) throws ParseException;
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ParseException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ParseException.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ParseException.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,10 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class ParseException extends Exception {
++    public ParseException(String msg) {
++        super(msg);
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/PrimitiveCommandNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/PrimitiveCommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/PrimitiveCommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,21 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class PrimitiveCommandNode extends Node {
++    private String name;
++
++    @Override
++    public void parse(Context context) throws ParseException {
++        name = context.currentToken();
++        context.skipToken(name);
++        if (!name.equals("go") && !name.equals("right") && !name.equals("left")) {
++            throw new ParseException(name + "is undefined");
++        }
++    }
++    public String toString() {
++        return name;
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ProgramNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ProgramNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/ProgramNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,20 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++// <program> :: = program <command list>
++public class ProgramNode extends Node {
++    private Node commandListNode;
++
++    @Override
++    public void parse(Context context) throws ParseException {
++        context.skipToken("program");
++        commandListNode = new CommandListNode();
++        commandListNode.parse(context);
++
++    }
++    public String toString() {
++        return "[program " + commandListNode + "]";
++    }
++}
+Index: interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/RepeatCommandNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/RepeatCommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ interpreter/src/jp/ac/it_college/std/s14002/pdp/interpreter/RepeatCommandNode.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,21 @@
++package jp.ac.it_college.std.s14002.pdp.interpreter;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class RepeatCommandNode extends Node {
++    private int number;
++    private Node commandListNode;
++
++    @Override
++    public void parse(Context context) throws ParseException {
++        context.skipToken("repeat");
++        number = context.currentNumber();
++        context.nextToken();
++        commandListNode = new CommandListNode();
++        commandListNode.parse(context);
++    }
++    public String toString() {
++        return "[repeat " + number+ " " + commandListNode + "]";
++    }
++}
+Index: program.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- program.txt	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ program.txt	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,5 @@
++program end
++program go end
++program go right go right go right go right end
++program repeat 4 go right end end
++program repeat 4 repeat 3 go right go left end right end end
+\ No newline at end of file
+Index: proxy/proxy.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- proxy/proxy.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ proxy/proxy.iml	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,14 @@
++package jp.ac.it_college.std.s14002.pdp.proxy;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class Main {
++    public static void main(String[] args) {
++        Printable p =new PrinterProxy("Alice");
++        System.out.println("名前は現在" + p.getPrinterName() + "です");
++        p.setPrinterName("Bob");
++        System.out.println("名前は現在" + p.getPrinterName() + "です");
++        p.print("Hello, world");
++    }
++}
+Index: proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printable.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printable.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printable.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,10 @@
++package jp.ac.it_college.std.s14002.pdp.proxy;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public interface Printable {
++    void setPrinterName(String name);
++    String getPrinterName();
++    void print(String string);
++}
+Index: proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printer.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/Printer.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,36 @@
++package jp.ac.it_college.std.s14002.pdp.proxy;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class Printer implements Printable {
++    private String name;
++    public Printer() {
++        heavyJob("Printerのインスタンス生成中");
++    }
++    public Printer(String name) {
++        this.name = name;
++        heavyJob("Printrtのインスタンス("+name+")を生成中");
++    }
++    public void setPrinterName(String name) {
++        this.name= name;
++    }
++    public String getPrinterName() {
++        return  name;
++    }
++    public void  print(String string) {
++        System.out.println("=== " +name+ " ===");
++        System.out.println(string);
++    }
++    private void heavyJob(String msg) {
++        System.out.print(msg);
++        for (int i = 0;i<5 ;i++){
++            try {
++                Thread.sleep(1000);
++            } catch (InterruptedException e) {
++            }
++            System.out.print(".");
++        }
++        System.out.println("完了。");
++    }
++}
+Index: proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/PrinterProxy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/PrinterProxy.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
++++ proxy/src/jp/ac/it_college/std/s14002/pdp/proxy/PrinterProxy.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -0,0 +1,36 @@
++package jp.ac.it_college.std.s14002.pdp.proxy;
++
++/**
++ * Created by s14002 on 15/06/18.
++ */
++public class PrinterProxy implements Printable {
++    private String name;
++    private Printer real;
++    public  PrinterProxy(String name) {
++        this.name = name;
++    }
++
++    @Override
++    public synchronized void setPrinterName(String name) {
++        if (real !=null) {
++            real.setPrinterName(name);
++        }
++        this.name =name;
++    }
++
++    @Override
++    public String getPrinterName() {
++        return name;
++    }
++
++    @Override
++    public void print(String string) {
++        realize();
++        real.print(string);
++    }
++    private synchronized void realize() {
++        if (real == null) {
++            real =new Printer(name);
++        }
++    }
++}
+Index: src/jp/ac/it_college/std/s14002/pdp/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/jp/ac/it_college/std/s14002/pdp/Main.java	(revision 7c476acbbc5ffde0676a89fd0344f16ae5df8a7c)
++++ src/jp/ac/it_college/std/s14002/pdp/Main.java	(revision d93ba170117288961e202b1411c0d866319c16cf)
+@@ -71,7 +71,10 @@
+         //jp.ac.it_college.std.s14002.pdp.observer.Main.main(args);
+         //jp.ac.it_college.std.s14002.pdp.memento.Main.main(args);
+         //jp.ac.it_college.std.s14002.pdp.state.Main.main(args);
+-        jp.ac.it_college.std.s14002.pdp.flyweight.Main.main(new String[]{"1212123"});
++        //jp.ac.it_college.std.s14002.pdp.flyweight.Main.main(new String[]{"1212123"});
++        //jp.ac.it_college.std.s14002.pdp.proxy.Main.main(args);
++        //jp.ac.it_college.std.s14002.pdp.command.Main.main(args);
++        jp.ac.it_college.std.s14002.pdp.interpreter.Main.main(args);
+     }
+ 
+     public static void compositeMain() {
